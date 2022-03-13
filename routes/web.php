@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,8 +18,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+
+Route::controller(DashboardController::class)
+    ->prefix('dashboard')
+    ->as('dashboard.')
+    ->middleware(['auth'])
+    ->group(function () {
+        Route::get('/', 'show')->name('show');
+        Route::post('regenrate-key', 'regenrateKey')->name('regenrate-key');
+    });
 
 require __DIR__.'/auth.php';
