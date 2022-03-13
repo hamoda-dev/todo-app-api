@@ -22,7 +22,7 @@ Route::get('/', function () {
 Route::controller(DashboardController::class)
     ->prefix('dashboard')
     ->as('dashboard.')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'is-admin'])
     ->group(function () {
         Route::get('/', 'show')->name('show');
         Route::post('regenrate-key', 'regenrateKey')->name('regenrate-key');
