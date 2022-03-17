@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Actions\CreateUser;
 use App\Enums\Role;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,35 +32,40 @@ class CreateAdminCommand extends Command
      */
     public function handle(CreateUser $createUser): int
     {
+        $user = User::whereRole(Role::Admin)->count();
+        if ($user > 0) {
+            $this->info('Admin Exists');
+            return 1;
+        }
+
         $this->drawHeader();
 
         // get username
-        do {
-            $userName = $this->ask('Enter Admin Name');
-        } while ($this->validateInput(
-            data: ['name' => $userName],
-            rules: ['name' => 'required|string']
-        ));
+        $userName = $this->getInput(
+            placeholder: 'Enter Admin Name',
+            filed: 'name',
+            rules: 'required|string'
+        );
 
         // get email
-        do {
-            $email = $this->ask('Enter Email');
-        } while ($this->validateInput(
-            data: ['email' => $email],
-            rules: ['email' => 'required|email|unique:users']
-        ));
+        $email = $this->getInput(
+            placeholder: 'Enter Email',
+            filed: 'email',
+            rules: 'required|email|unique:users'
+        );
 
         // get password
-        do {
-            $password = $this->secret('Enter Password (type it\'s hidden)');
-        } while ($this->validateInput(
-            data: ['password' => $password],
-            rules: ['password' => 'required|string|min:8']
-        ));
+        $password = $this->getInput(
+            placeholder: 'Enter Password (type it\'s hidden)',
+            filed: 'password',
+            rules: 'required|string|min:8'
+        );
 
         // create admin
+        $admin = ($createUser(['name' => $userName, 'email' => $email, 'password' => $password, 'role' => Role::Admin]));
+
         // user didn't create
-        if (!($createUser(['name' => $userName, 'email' => $email, 'password' => $password, 'role' => Role::Admin]))) {
+        if (!$admin) {
             $this->error('Sorry :( User Can\'t Created');
             return 1;
         }
@@ -98,5 +104,17 @@ class CreateAdminCommand extends Command
             return true;
         }
         return false;
+    }
+
+    private function getInput(string $placeholder, string $filed, array|string $rules): string
+    {
+        do {
+            $value = $this->ask($placeholder);
+        } while ($this->validateInput(
+            data: [$filed => $value],
+            rules: [$filed => $rules]
+        ));
+
+        return $value;
     }
 }

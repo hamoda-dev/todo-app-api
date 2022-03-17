@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Commands;
 
+use App\Enums\Role;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -74,5 +76,20 @@ class CreateAdminTest extends TestCase
             ->expectsOutput('The password field is required.')
             ->expectsQuestion('Enter Password (type it\'s hidden)', 'password')
             ->assertSuccessful();
+    }
+
+    /**
+     * Test Can't Create more than one admin
+     *
+     * @test
+     * @return void
+     */
+    public function can_not_create_more_than_one_admin(): void
+    {
+        User::factory()->create(['role' => Role::Admin]);
+
+        $this->artisan('todo:create-admin')
+            ->expectsOutput('Admin Exists')
+            ->assertFailed();
     }
 }
