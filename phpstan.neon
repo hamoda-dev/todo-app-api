@@ -12,5 +12,9 @@ parameters:
     ignoreErrors:
 
     excludePaths:
-
+        - app/Http/Resources/UserResource.php
+        - app/Http/Controllers/Api/Auth/AuthenticatedSessionController.php
+        - app/Http/Controllers/Api/Auth/VerifyEmailController.php
     checkMissingIterableValueType: false
+
+    checkGenericClassInNonGenericObjectType: false

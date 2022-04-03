@@ -17,15 +17,11 @@ class CreateUser
      */
     public function __invoke(array $data): array
     {
+        $data['password'] = bcrypt($data['password']);
+
         DB::beginTransaction();
         try {
-            $createStatus = (new User([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
-                'role' => $data['role'],
-            ]))->save();
-
+            $createStatus = User::create($data);
             $feedback = array(
                 'status' => $createStatus,
                 'user' => User::latest()->first(),
