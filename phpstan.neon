@@ -13,6 +13,7 @@ parameters:
 
     excludePaths:
         - app/Http/Resources/UserResource.php
+        - app/Http/Resources/TaskResource.php
         - app/Http/Controllers/Api/Auth/AuthenticatedSessionController.php
         - app/Http/Controllers/Api/Auth/VerifyEmailController.php
     checkMissingIterableValueType: false

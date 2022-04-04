@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Enums\Role;
 use App\Models\User;
+use Database\Seeders\SettingSeeder;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -17,7 +18,7 @@ class DashboardTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->seed();
+        $this->seed(SettingSeeder::class);
     }
 
     /**

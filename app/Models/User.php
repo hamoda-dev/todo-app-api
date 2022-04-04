@@ -7,6 +7,7 @@ use App\Traits\Uuid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -56,7 +57,7 @@ class User extends Authenticatable
     /**
      * The attributes that should be cast.
      *
-     * @var array<string, string>
+     * @var array<string, mixed>
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
@@ -71,5 +72,15 @@ class User extends Authenticatable
     public function getAuthPassword(): string
     {
         return $this->password;
+    }
+
+    /**
+     * User Has Many Task Relationship
+     *
+     * @return HasMany
+     */
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 }
